@@ -1,55 +1,36 @@
 import React from "react";
-import {
-  MdDashboard,
-  MdPerson,
-  MdPeople,
-  MdEventNote,
-  MdTag,
-  MdScience,
-  MdList,
-  MdAdd,
-  MdLocalOffer,
-  MdWarning,
-  MdShare,
-  MdVpnKey,
-  MdAccountBalanceWallet,
-  MdMonetizationOn,
-} from "react-icons/md";
 
 const Sidebar = ({ currentPage, setCurrentPage }) => {
   const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: MdDashboard },
-    { id: "doctor", label: "Doctor", icon: MdPerson },
-    { id: "patients", label: "Patients", icon: MdPeople },
-    { id: "appointment", label: "Appointment", icon: MdEventNote },
-    { id: "specialties", label: "Specialties", icon: MdTag },
-    { id: "ingredients", label: "Ingredients", icon: MdScience },
-    { id: "ingredients-list", label: "Ingredients List", icon: MdList },
-    { id: "add-ingredient", label: "Add ingredients", icon: MdAdd },
-    { id: "coupons", label: "Coupons", icon: MdLocalOffer },
-    { id: "concerns", label: "Concerns", icon: MdWarning },
-    { id: "referral", label: "Referral", icon: MdShare },
-    { id: "customization", label: "Customization", icon: MdVpnKey },
-    { id: "wallet", label: "Wallet", icon: MdAccountBalanceWallet },
-    { id: "refund", label: "Refund", icon: MdMonetizationOn },
+    { id: "dashboard", label: "Dashboard", icon: "📊" },
+    { id: "doctor", label: "Doctor", icon: "👨‍⚕️" },
+    { id: "patients", label: "Patients", icon: "👥" },
+    { id: "appointment", label: "Appointment", icon: "📅" },
+    { id: "specialties", label: "Specialties", icon: "🏷️" },
+    { id: "ingredients", label: "Ingredients", icon: "🧪" },
+    { id: "ingredients-list", label: "Ingredients List", icon: "📋" },
+    { id: "add-ingredient", label: "Add ingredients", icon: "➕" },
+    { id: "coupons", label: "Coupons", icon: "🎟️" },
+    { id: "concerns", label: "Concerns", icon: "⚠️" },
+    { id: "referral", label: "Referral", icon: "🔗" },
+    { id: "customization", label: "Customization", icon: "⚙️" },
+    { id: "wallet", label: "Wallet", icon: "💰" },
+    { id: "refund", label: "Refund", icon: "💵" },
   ];
 
   return (
     <div className="sidebar">
-      {menuItems.map((item) => {
-        const Icon = item.icon;
-        return (
-          <div
-            key={item.id}
-            className="sidebar-item"
-            onClick={() => setCurrentPage(item.id)}
-          >
-            <Icon className="sidebar-icon" />
-            <span className="sidebar-label">{item.label}</span>
-            <span className="sidebar-arrow">›</span>
-          </div>
-        );
-      })}
+      {menuItems.map((item) => (
+        <div
+          key={item.id}
+          className="sidebar-item"
+          onClick={() => setCurrentPage(item.id)}
+        >
+          <span className="sidebar-icon">{item.icon}</span>
+          <span className="sidebar-label">{item.label}</span>
+          <span className="sidebar-arrow">›</span>
+        </div>
+      ))}
     </div>
   );
 };
