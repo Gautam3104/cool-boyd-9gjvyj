@@ -2,353 +2,364 @@ import React, { useState } from "react";
 import "./styles/App.css";
 
 function App() {
-  const [currentPage, setCurrentPage] = useState("dashboard");
+  const [currentPage, setCurrentPage] = useState("ingredients-list");
   const [ingredients, setIngredients] = useState([
     {
       id: 1,
-      name: "Flour",
-      category: "Dry Goods",
-      quantity: 50,
-      unit: "kg",
-      price: 300,
-      status: "in_stock",
+      name: "Khus Khus",
+      description: "A versatile herb...",
+      status: "Active",
+      color: "#F4A460",
     },
     {
       id: 2,
-      name: "Sugar",
-      category: "Dry Goods",
-      quantity: 30,
-      unit: "kg",
-      price: 200,
-      status: "in_stock",
+      name: "Rakta Chandan",
+      description: "Red Sandalwood herb...",
+      status: "Active",
+      color: "#DC143C",
     },
     {
       id: 3,
-      name: "Oil",
-      category: "Liquids",
-      quantity: 20,
-      unit: "L",
-      price: 150,
-      status: "low_stock",
+      name: "Swarn Bhashm",
+      description: "Metallic preparation...",
+      status: "Active",
+      color: "#FFD700",
     },
     {
       id: 4,
-      name: "Milk",
-      category: "Dairy",
-      quantity: 10,
-      unit: "L",
-      price: 120,
-      status: "low_stock",
+      name: "Giloy",
+      description: "Immunomodulator herb...",
+      status: "Active",
+      color: "#90EE90",
     },
     {
       id: 5,
-      name: "Eggs",
-      category: "Dairy",
-      quantity: 5,
-      unit: "crate",
-      price: 180,
-      status: "in_stock",
+      name: "Bhringraj",
+      description: "King of Hair herb...",
+      status: "Active",
+      color: "#8B4513",
     },
   ]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [newIngredient, setNewIngredient] = useState({
+    name: "",
+    description: "",
+    status: "Active",
+    attachment: null,
+  });
 
-  const pages = {
-    dashboard: { title: "Dashboard", label: "Dashboard" },
-    list: { title: "Ingredients List", label: "List" },
-    add: { title: "Add Ingredient", label: "Add New" },
-    edit: { title: "Edit Ingredient", label: "Edit" },
-    view: { title: "View Ingredient", label: "View" },
-    categories: { title: "Manage Categories", label: "Categories" },
-    inventory: { title: "Inventory Management", label: "Inventory" },
-    reports: { title: "Analytics & Reports", label: "Reports" },
-    history: { title: "Change History", label: "History" },
-    bulk: { title: "Bulk Actions", label: "Bulk" },
-    settings: { title: "Settings", label: "Settings" },
-  };
+  const filteredIngredients = ingredients.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const renderPage = () => {
-    switch (currentPage) {
-      case "dashboard":
-        return <DashboardPage ingredients={ingredients} />;
-      case "list":
-        return <ListPage ingredients={ingredients} />;
-      case "add":
-        return <AddPage setCurrentPage={setCurrentPage} />;
-      case "edit":
-        return <EditPage setCurrentPage={setCurrentPage} />;
-      case "view":
-        return <ViewPage setCurrentPage={setCurrentPage} />;
-      case "categories":
-        return <CategoriesPage />;
-      case "inventory":
-        return <InventoryPage ingredients={ingredients} />;
-      case "reports":
-        return <ReportsPage ingredients={ingredients} />;
-      case "history":
-        return <HistoryPage />;
-      case "bulk":
-        return <BulkPage />;
-      case "settings":
-        return <SettingsPage />;
-      default:
-        return <DashboardPage ingredients={ingredients} />;
+  const handleAddIngredient = (e) => {
+    e.preventDefault();
+    if (newIngredient.name.trim()) {
+      const newItem = {
+        id: ingredients.length + 1,
+        name: newIngredient.name,
+        description: newIngredient.description,
+        status: newIngredient.status,
+        color: "#" + Math.floor(Math.random() * 16777215).toString(16),
+      };
+      setIngredients([...ingredients, newItem]);
+      setNewIngredient({
+        name: "",
+        description: "",
+        status: "Active",
+        attachment: null,
+      });
+      setCurrentPage("ingredients-list");
     }
   };
 
+  const handleFileChange = (e) => {
+    setNewIngredient({ ...newIngredient, attachment: e.target.files[0] });
+  };
+
   return (
-    <div className="admin-container">
-      <header className="admin-header">
-        <h1>Admin - Ingredients</h1>
-        <p>Manage your ingredient inventory efficiently</p>
-      </header>
+    <div className="app-container">
+      <div className="header">
+        <div className="header-left">
+          <div className="logo">AMRUTAM</div>
+        </div>
+        <div className="header-right">
+          <span className="user-name">Name</span>
+          <span className="user-dept">Department</span>
+          <div className="user-avatar"></div>
+        </div>
+      </div>
 
-      <div className="admin-layout">
-        <nav className="admin-nav">
-          <div className="nav-title">Pages</div>
-          <ul className="nav-list">
-            {Object.entries(pages).map(([key, page]) => (
-              <li key={key}>
-                <button
-                  className={`nav-btn ${currentPage === key ? "active" : ""}`}
-                  onClick={() => setCurrentPage(key)}
-                >
-                  {page.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <main className="admin-main">
-          <div className="page-header">
-            <h2>{pages[currentPage].title}</h2>
+      <div className="main-layout">
+        <div className="sidebar">
+          <div className="sidebar-item">
+            <span className="sidebar-icon">D</span> Dashboard{" "}
+            <span className="arrow">›</span>
           </div>
-          {renderPage()}
-        </main>
-      </div>
-    </div>
-  );
-}
-
-// Page Components
-function DashboardPage({ ingredients }) {
-  return (
-    <div className="page-content">
-      <div className="stats-grid">
-        <div className="stat-card">
-          <h3>Total Items</h3>
-          <p>{ingredients.length}</p>
-        </div>
-        <div className="stat-card">
-          <h3>In Stock</h3>
-          <p>{ingredients.filter((i) => i.status === "in_stock").length}</p>
-        </div>
-        <div className="stat-card">
-          <h3>Low Stock</h3>
-          <p>{ingredients.filter((i) => i.status === "low_stock").length}</p>
-        </div>
-        <div className="stat-card">
-          <h3>Total Value</h3>
-          <p>
-            ₹{ingredients.reduce((sum, i) => sum + i.price * i.quantity, 0)}
-          </p>
-        </div>
-      </div>
-      <div className="recent-items">
-        <h3>Recent Items</h3>
-        <ul>
-          {ingredients.map((i) => (
-            <li key={i.id}>
-              {i.name} - {i.quantity}
-              {i.unit}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-}
-
-function ListPage({ ingredients }) {
-  return (
-    <div className="page-content">
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Qty</th>
-            <th>Unit</th>
-            <th>Price</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ingredients.map((i) => (
-            <tr key={i.id}>
-              <td>{i.name}</td>
-              <td>{i.category}</td>
-              <td>{i.quantity}</td>
-              <td>{i.unit}</td>
-              <td>₹{i.price}</td>
-              <td>
-                <span className={`status ${i.status}`}>
-                  {i.status.replace("_", " ")}
-                </span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function AddPage({ setCurrentPage }) {
-  return (
-    <div className="page-content">
-      <h3>Add New Ingredient Form</h3>
-      <form>
-        <input type="text" placeholder="Name" />
-        <input type="text" placeholder="Category" />
-        <input type="number" placeholder="Quantity" />
-        <button>Save</button>
-      </form>
-    </div>
-  );
-}
-
-function EditPage({ setCurrentPage }) {
-  return (
-    <div className="page-content">
-      <h3>Edit Ingredient Form</h3>
-      <form>
-        <input type="text" placeholder="Name" defaultValue="Flour" />
-        <input type="text" placeholder="Category" defaultValue="Dry Goods" />
-        <input type="number" placeholder="Quantity" defaultValue="50" />
-        <button>Update</button>
-      </form>
-    </div>
-  );
-}
-
-function ViewPage({ setCurrentPage }) {
-  return (
-    <div className="page-content">
-      <h3>Ingredient Details</h3>
-      <div className="detail-view">
-        <p>
-          <strong>Name:</strong> Flour
-        </p>
-        <p>
-          <strong>Category:</strong> Dry Goods
-        </p>
-        <p>
-          <strong>Quantity:</strong> 50 kg
-        </p>
-        <p>
-          <strong>Price:</strong> ₹300
-        </p>
-        <p>
-          <strong>Status:</strong> In Stock
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function CategoriesPage() {
-  return (
-    <div className="page-content">
-      <h3>Manage Categories</h3>
-      <ul>
-        <li>Dry Goods</li>
-        <li>Liquids</li>
-        <li>Dairy</li>
-        <li>Spices</li>
-      </ul>
-    </div>
-  );
-}
-
-function InventoryPage({ ingredients }) {
-  return (
-    <div className="page-content">
-      <h3>Stock Levels</h3>
-      <div className="inventory-list">
-        {ingredients.map((i) => (
-          <div key={i.id} className="inventory-item">
-            <span>{i.name}</span>
-            <div
-              className="progress-bar"
-              style={{ width: `${(i.quantity / 100) * 100}%` }}
-            ></div>
+          <div className="sidebar-item">
+            <span className="sidebar-icon">D</span> Doctor{" "}
+            <span className="arrow">›</span>
           </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+          <div className="sidebar-item">
+            <span className="sidebar-icon">P</span> Patients{" "}
+            <span className="arrow">›</span>
+          </div>
+          <div className="sidebar-item">
+            <span className="sidebar-icon">A</span> Appointment{" "}
+            <span className="arrow">›</span>
+          </div>
+          <div className="sidebar-item">
+            <span className="sidebar-icon">S</span> Specialties{" "}
+            <span className="arrow">›</span>
+          </div>
+          <div className="sidebar-item active">
+            <span className="sidebar-icon">I</span> Ingredients{" "}
+            <span className="arrow">›</span>
+          </div>
+          <div
+            className="sidebar-subitem"
+            onClick={() => setCurrentPage("ingredients-list")}
+            style={{ cursor: "pointer" }}
+          >
+            <span className="sidebar-icon">L</span> Ingredients List
+          </div>
+          <div
+            className="sidebar-subitem"
+            onClick={() => setCurrentPage("add-ingredient")}
+            style={{ cursor: "pointer" }}
+          >
+            <span className="sidebar-icon">+</span> Add ingredients
+          </div>
+          <div className="sidebar-item">
+            <span className="sidebar-icon">C</span> Coupons{" "}
+            <span className="arrow">›</span>
+          </div>
+          <div className="sidebar-item">
+            <span className="sidebar-icon">C</span> Concerns{" "}
+            <span className="arrow">›</span>
+          </div>
+          <div className="sidebar-item">
+            <span className="sidebar-icon">R</span> Referral{" "}
+            <span className="arrow">›</span>
+          </div>
+          <div className="sidebar-item">
+            <span className="sidebar-icon">C</span> Customization{" "}
+            <span className="arrow">›</span>
+          </div>
+          <div className="sidebar-item">
+            <span className="sidebar-icon">W</span> Wallet{" "}
+            <span className="arrow">›</span>
+          </div>
+          <div className="sidebar-item">
+            <span className="sidebar-icon">R</span> Refund{" "}
+            <span className="arrow">›</span>
+          </div>
+        </div>
 
-function ReportsPage({ ingredients }) {
-  return (
-    <div className="page-content">
-      <h3>Analytics</h3>
-      <p>
-        Total Inventory Value: ₹
-        {ingredients.reduce((s, i) => s + i.price * i.quantity, 0)}
-      </p>
-      <p>
-        Average Price: ₹
-        {(
-          ingredients.reduce((s, i) => s + i.price, 0) / ingredients.length
-        ).toFixed(2)}
-      </p>
-    </div>
-  );
-}
+        <div className="main-content">
+          {currentPage === "ingredients-list" && (
+            <>
+              <div className="page-header">
+                <h1>Ingredients</h1>
+              </div>
+              <div className="ingredients-section">
+                <div className="section-header">
+                  <h2>Ingredients List</h2>
+                  <div className="header-controls">
+                    <input
+                      type="text"
+                      className="search-bar"
+                      placeholder="Search here"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <button
+                      className="add-btn"
+                      onClick={() => setCurrentPage("add-ingredient")}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+                <div className="table-container">
+                  <table className="ingredients-table">
+                    <thead>
+                      <tr>
+                        <th>
+                          <input type="checkbox" />
+                        </th>
+                        <th>Ingredients</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredIngredients.map((item) => (
+                        <tr key={item.id}>
+                          <td>
+                            <input type="checkbox" />
+                          </td>
+                          <td>
+                            <div className="ingredient-name">
+                              <span
+                                className="color-dot"
+                                style={{ backgroundColor: item.color }}
+                              ></span>
+                              <span>{item.name}</span>
+                            </div>
+                          </td>
+                          <td className="description">{item.description}</td>
+                          <td>
+                            <span className="status-badge active">
+                              {item.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="pagination">
+                  <button className="prev-btn">‹</button>
+                  <span className="page-num">1</span>
+                  <span className="page-dots">...</span>
+                  <button className="next-btn">›</button>
+                </div>
+              </div>
+            </>
+          )}
 
-function HistoryPage() {
-  return (
-    <div className="page-content">
-      <h3>Change History</h3>
-      <ul>
-        <li>Flour - Updated 2 hours ago</li>
-        <li>Sugar - Added 1 day ago</li>
-        <li>Oil - Quantity changed 3 days ago</li>
-      </ul>
-    </div>
-  );
-}
-
-function BulkPage() {
-  return (
-    <div className="page-content">
-      <h3>Bulk Operations</h3>
-      <button className="action-btn">Import from CSV</button>
-      <button className="action-btn">Export Data</button>
-      <button className="action-btn">Update All Prices</button>
-    </div>
-  );
-}
-
-function SettingsPage() {
-  return (
-    <div className="page-content">
-      <h3>Admin Settings</h3>
-      <div className="settings-form">
-        <label>
-          <input type="checkbox" defaultChecked /> Enable Notifications
-        </label>
-        <label>
-          <input type="checkbox" defaultChecked /> Auto Backup
-        </label>
-        <label>
-          Default Currency:{" "}
-          <select>
-            <option>INR</option>
-            <option>USD</option>
-          </select>
-        </label>
+          {currentPage === "add-ingredient" && (
+            <>
+              <div className="page-header">
+                <div className="breadcrumb">
+                  <span
+                    onClick={() => setCurrentPage("ingredients-list")}
+                    style={{ cursor: "pointer", color: "#4a90e2" }}
+                  >
+                    Ingredients
+                  </span>
+                  <span> &gt; Add Ingredients</span>
+                </div>
+                <h1>Add Ingredients</h1>
+              </div>
+              <div className="add-ingredient-form">
+                <form onSubmit={handleAddIngredient}>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="ingredient-name">Speciality Name *</label>
+                      <input
+                        type="text"
+                        id="ingredient-name"
+                        className="form-input"
+                        placeholder="Enter ingredient name"
+                        value={newIngredient.name}
+                        onChange={(e) =>
+                          setNewIngredient({
+                            ...newIngredient,
+                            name: e.target.value,
+                          })
+                        }
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="ingredient-description">
+                        Specialty Description *
+                      </label>
+                      <textarea
+                        id="ingredient-description"
+                        className="form-textarea"
+                        placeholder="Enter detailed description"
+                        value={newIngredient.description}
+                        onChange={(e) =>
+                          setNewIngredient({
+                            ...newIngredient,
+                            description: e.target.value,
+                          })
+                        }
+                        rows="4"
+                      ></textarea>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label>Status</label>
+                    <div className="radio-group">
+                      <label className="radio-label">
+                        <input
+                          type="radio"
+                          name="status"
+                          value="Active"
+                          checked={newIngredient.status === "Active"}
+                          onChange={(e) =>
+                            setNewIngredient({
+                              ...newIngredient,
+                              status: e.target.value,
+                            })
+                          }
+                        />{" "}
+                        Active
+                      </label>
+                      <label className="radio-label">
+                        <input
+                          type="radio"
+                          name="status"
+                          value="Inactive"
+                          checked={newIngredient.status === "Inactive"}
+                          onChange={(e) =>
+                            setNewIngredient({
+                              ...newIngredient,
+                              status: e.target.value,
+                            })
+                          }
+                        />{" "}
+                        Inactive
+                      </label>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="attachment"># Attachment</label>
+                    <div className="file-input-wrapper">
+                      <input
+                        type="file"
+                        id="attachment"
+                        className="file-input"
+                        onChange={handleFileChange}
+                      />
+                      <button type="button" className="select-btn">
+                        Select
+                      </button>
+                      {newIngredient.attachment && (
+                        <span className="file-name">
+                          {newIngredient.attachment.name}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="form-actions">
+                    <button
+                      type="button"
+                      className="btn-clear"
+                      onClick={() =>
+                        setNewIngredient({
+                          name: "",
+                          description: "",
+                          status: "Active",
+                          attachment: null,
+                        })
+                      }
+                    >
+                      Clear
+                    </button>
+                    <button type="submit" className="btn-submit">
+                      Submit
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
