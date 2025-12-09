@@ -105,8 +105,12 @@ body {
 }
 
 .sidebar-icon {
-  width: 20px;
+  width: auto;
+  min-width: 24px;
   display: inline-block;
+  font-size: 20px;
+  text-align: center;
+  color: inherit;
 }
 
 .sidebar-subitem {

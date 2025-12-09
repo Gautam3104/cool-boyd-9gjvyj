@@ -161,7 +161,6 @@ function App() {
             <span className="arrow">›</span>
           </div>
         </div>
-        const [selectedIngredient, setSelectedIngredient] = useState(null);
         <div className="main-content">
           {currentPage === "ingredients-list" && (
             <>
@@ -364,29 +363,6 @@ function App() {
                 </form>
               </div>
             </>
-          )}
-
-          {currentPage === "view-ingredient" && selectedIngredient && (
-            <ViewIngredient
-              ingredient={selectedIngredient}
-              onEdit={() => setCurrentPage("edit-ingredient")}
-              onBack={() => setCurrentPage("ingredients-list")}
-            />
-          )}
-
-          {currentPage === "edit-ingredient" && selectedIngredient && (
-            <EditIngredient
-              ingredient={selectedIngredient}
-              onSubmit={(updatedIngredient) => {
-                setIngredients(
-                  ingredients.map((ing) =>
-                    ing.id === updatedIngredient.id ? updatedIngredient : ing
-                  )
-                );
-                setCurrentPage("view-ingredient");
-              }}
-              onCancel={() => setCurrentPage("view-ingredient")}
-            />
           )}
         </div>
       </div>
