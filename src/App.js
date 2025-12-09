@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 import "./styles/App.css";
+import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
+import IngredientsList from "./pages/IngredientsManager";
+import AddIngredient from "./pages/AddIngredient";
+import EditIngredient from "./pages/EditIngredient";
+import ViewIngredient from "./pages/ViewIngredient";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("ingredients-list");
